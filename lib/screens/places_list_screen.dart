@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:great_places/providers/places_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,18 +20,30 @@ class PlacesListScreen extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Consumer<PlacesProvider>(
-            child: Text('Add Places Now!'),
-            builder: (_, placesData, ch) => (placesData.places.length <= 0) ? ch : ListView.builder(
-              itemBuilder: (_, i) => ListTile(
-                leading: CircleAvatar(backgroundImage: FileImage(placesData.places[i].image)),
-                title: Text(placesData.places[i].title),
-              ),
-              itemCount: placesData.places.length,
-            ),
-          ),
+          child: FutureBuilder(
+            future: Provider.of<PlacesProvider>(context, listen: false)
+                .fetchAndSetPlaces(),
+            builder: (ctx, snapshot) =>
+                snapshot.connectionState == ConnectionState.waiting
+                   ? CircularProgressIndicator()
+                   : Consumer<PlacesProvider>(
+                 child: Text('Add Places Now!'),
+                builder: (_, placesData, ch) =>
+               (placesData.places.length <= 0)
+                 ? ch
+                 : ListView.builder(
+                     itemBuilder: (_, i) => ListTile(
+                       leading: CircleAvatar(
+                      backgroundImage: FileImage(
+                        placesData.places[i].image)),
+                       title: Text(placesData.places[i].title),
+                     ),
+                     itemCount: placesData.places.length,
+                  ),
+             ),
+             ),
+         ),
         ),
-      ),
-    );
+      );
   }
 }
