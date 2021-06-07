@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:great_places/providers/places_provider.dart';
 import 'package:great_places/widgets/image_input.dart';
+import 'package:provider/provider.dart';
 
 class AddPlaceScreen extends StatefulWidget {
   static const routeName = '/add-place-screen';
@@ -10,6 +14,20 @@ class AddPlaceScreen extends StatefulWidget {
 }
 
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
+
+  File _pickedImage;
+  _selectImage(File pickedImage){
+    _pickedImage = pickedImage;
+  }
+
+  _savePlace(){
+    if (_controller.text.isEmpty || _pickedImage == null){
+      return;
+    }
+    Provider.of<PlacesProvider>(context,listen: false).addPlace(_controller.text,_pickedImage);
+    Navigator.of(context).pop();
+  }
+
   TextEditingController _controller = TextEditingController();
 
   @override
@@ -32,14 +50,14 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     controller: _controller,
                   ),
                   SizedBox(height: 10.0,),
-                  InputImage(),
+                  InputImage(_selectImage),
                 ],
               ),
             ),
           )),
           ElevatedButton.icon(
             label: Text('Add Place'),
-            onPressed: () {},
+            onPressed: _savePlace,
             icon: Icon(Icons.add),
             style: buildButtonStyle(context),
           )
