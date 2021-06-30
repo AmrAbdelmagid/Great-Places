@@ -21,6 +21,10 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
     _pickedImage = pickedImage;
   }
 
+  void _selectPlace (double lat, double lng){
+    //...
+  }
+
   _savePlace(){
     if (_controller.text.isEmpty || _pickedImage == null){
       return;
@@ -53,7 +57,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                   SizedBox(height: 10.0,),
                   InputImage(_selectImage),
                   SizedBox(height: 10.0,),
-                  InputLocation(),
+                  InputLocation(_selectPlace),
                 ],
               ),
             ),
